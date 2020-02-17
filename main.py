@@ -46,8 +46,9 @@ class spider(object):
         armor_elements = self.browser.find_element_by_css_selector("div.f_min").find_elements_by_css_selector("a")
         armor_list = [[x.text, x.get_attribute("href")] for x in armor_elements]
 
-        for item in armor_list:
-            self.get_armor_page(item[1], item[0])
+        for i in range(len(armor_list)):
+            print("------------------------------------------------------{0}------------------------------------------------------".format(i))
+            self.get_armor_page(armor_list[i][1], armor_list[i][0])
         pass
 
     def get_armor_page(self, url, name):
@@ -132,11 +133,14 @@ class spider(object):
 
         # sets skills
         set_skill_table = ls_table[6]
-        skill = set_skill_table.find_elements_by_css_selector("tr")[1].find_elements_by_css_selector("td")[1].find_element_by_css_selector("a")
-        skill_id = re.search("[1-9][0-9]*", skill.get_attribute("href")).group()
-        skill_name = skill.text
-        for armor in armors:
-            armor.add_skill(int(skill_id), 1, skill_name)
+        if set_skill_table.find_elements_by_css_selector("tr")[1].text != "無し":
+            skills = set_skill_table.find_elements_by_css_selector("tr")
+            for i in range(1, len(skills)):
+                skill = skills[i].find_element_by_css_selector("a")
+                skill_id = re.search("[1-9][0-9]*", skill.get_attribute("href")).group()
+                skill_name = skill.text
+                for armor in armors:
+                    armor.add_skill(int(skill_id), 1, skill_name)
 
         # items
         fee_table = ls_table[7]
