@@ -53,7 +53,7 @@ class spider(object):
         # armor_elements = self.browser.find_element_by_css_selector("div.f_min").find_elements_by_css_selector("a")
         # armor_list = [[x.text, x.get_attribute("href")] for x in armor_elements]
 
-        for i in range（len(armor_elements)):
+        for i in range(len(armor_elements)):
             print("------------------------------------------------------{0}------------------------------------------------------".format(i))
             a = armor_elements[i].attrs["href"]
             self.get_armor_page("http://mhwg.org" + armor_elements[i].attrs["href"])
