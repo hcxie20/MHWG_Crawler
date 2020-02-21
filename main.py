@@ -44,12 +44,19 @@ class spider(object):
 
     def get_armor(self):
         self.browser.get("http://mhwg.org/data/3300.html")
-        armor_elements = self.browser.find_element_by_css_selector("div.f_min").find_elements_by_css_selector("a")
-        armor_list = [[x.text, x.get_attribute("href")] for x in armor_elements]
 
-        for i in range(len(armor_list)):
+        soup = BeautifulSoup(self.browser.page_source, "lxml")
+
+        armor_elements = soup.find("div", class_="f_min").find_all("a")
+
+
+        # armor_elements = self.browser.find_element_by_css_selector("div.f_min").find_elements_by_css_selector("a")
+        # armor_list = [[x.text, x.get_attribute("href")] for x in armor_elements]
+
+        for i in range（len(armor_elements)):
             print("------------------------------------------------------{0}------------------------------------------------------".format(i))
-            self.get_armor_page(armor_list[i][1])
+            a = armor_elements[i].attrs["href"]
+            self.get_armor_page("http://mhwg.org" + armor_elements[i].attrs["href"])
         pass
 
     def get_armor_page(self, url):
@@ -141,12 +148,17 @@ class spider(object):
         table = ls_table[7]
         if table.find("td").string != None:
             for armor in armors:
-                armor.fee = int(re.search("[1-9][0-9]*",table.find("td").string).group(0))
+                try: 
+                    armor.fee = int(re.search("[1-9][0-9]*",table.find("td").string).group(0))
+                except:
+                    print("No build fee")
 
-
-        table = ls_table[8]
-        rows = table.find_all("tr")[1:num+1]
-        pattern = re.compile(r"\d+")
+        try:
+            table = ls_table[8]
+            rows = table.find_all("tr")[1:num+1]
+            pattern = re.compile(r"\d+")
+        except:
+            print(url)
 
         # a = rows[0].find("td")
         if rows[0].find("td").text == "頭":
@@ -184,7 +196,7 @@ class spider(object):
 
 if __name__ == "__main__":
     a = spider()
-    # a.get_armor()
+    a.get_armor()
     # a.get_armor_page("http://mhwg.org/ida/226849.html")
-    a.get_armor_page("http://mhwg.org/ida/246519.html")
+    # a.get_armor_page("http://mhwg.org/ida/246519.html")
     pass
