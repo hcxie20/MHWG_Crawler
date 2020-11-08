@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 import os
 import re
-import time
+import json
 
 from src.models.armor import armor_c
 
@@ -49,13 +49,8 @@ class spider(object):
 
         armor_elements = soup.find("div", class_="f_min").find_all("a")
 
-
-        # armor_elements = self.browser.find_element_by_css_selector("div.f_min").find_elements_by_css_selector("a")
-        # armor_list = [[x.text, x.get_attribute("href")] for x in armor_elements]
-
         for i in range(len(armor_elements)):
             print("------------------------------------------------------{0}------------------------------------------------------".format(i))
-            a = armor_elements[i].attrs["href"]
             self.get_armor_page("http://mhwg.org" + armor_elements[i].attrs["href"])
         pass
 
@@ -179,6 +174,7 @@ class spider(object):
 
         for armor in armors:
             print(armor)
+            print(armor.__dict__)
         pass
 
     def get_skills(self):
@@ -197,6 +193,4 @@ class spider(object):
 if __name__ == "__main__":
     a = spider()
     a.get_armor()
-    # a.get_armor_page("http://mhwg.org/ida/226849.html")
-    # a.get_armor_page("http://mhwg.org/ida/246519.html")
     pass
